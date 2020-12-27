@@ -122,10 +122,9 @@ public class CryptoStreamAnalysis {
                     public Double call(Double aggregatedClosingValue) throws Exception {
                         return aggregatedClosingValue / 10;
                     }
-                })
-                .repartition(1);
+                });
 
-        //rdd containing stockName and avg closing price is printed to console
+        //prints rdd containing stockName and avg closing price to console
         stockAndAverageClosingValue.toJavaDStream().foreachRDD(new VoidFunction<JavaRDD<Tuple2<String, Double>>>() {
             @Override
             public void call(JavaRDD<Tuple2<String, Double>> tuple2JavaRDD) throws Exception {
@@ -174,8 +173,7 @@ public class CryptoStreamAnalysis {
             if (stock1._2 < stock2._2)
                 return stock2;
             else return stock1;
-        }).mapToPair(stringDoubleTuple2 -> new Tuple2<>(stringDoubleTuple2._1, stringDoubleTuple2._2))
-                .repartition(1);
+        }).mapToPair(stringDoubleTuple2 -> new Tuple2<>(stringDoubleTuple2._1, stringDoubleTuple2._2));
 
         //the stock with maximum profit is printed
         stockAndMaxProfit.toJavaDStream().foreachRDD(new VoidFunction<JavaRDD<Tuple2<String, Double>>>() {
@@ -213,14 +211,13 @@ public class CryptoStreamAnalysis {
         JavaPairDStream<String, Double> stockAndAggregatedVolumeData2 = stockAndAggregatedVolumeDataInPriceData
                 .mapToPair(stock -> new Tuple2<String,Double>(stock._1, stock._2.getVolume()));
 
-        //creates a new dstream containing the stock with maximum volume in all rdds and returns repartitions to 1 partition
+        //creates a new dstream containing the stock with maximum volume in all rdds
         JavaPairDStream<String,Double> stockAndMaxVolume = stockAndAggregatedVolumeData2
                 .reduce((stock1, stock2) -> {
                     if (stock1._2 < stock2._2)
                         return stock2;
                     else return stock1;
-                }).mapToPair(stockNameAndVolume -> new Tuple2<>(stockNameAndVolume._1, stockNameAndVolume._2))
-                .repartition(1);
+                }).mapToPair(stockNameAndVolume -> new Tuple2<>(stockNameAndVolume._1, stockNameAndVolume._2));
 
         //prints the stockName which has been traded in maximum volume
         stockAndMaxVolume.toJavaDStream().foreachRDD(new VoidFunction<JavaRDD<Tuple2<String, Double>>>() {
