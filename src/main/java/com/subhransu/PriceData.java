@@ -2,6 +2,7 @@ package com.subhransu;
 
 import java.io.Serializable;
 
+//this class is used to store the price data
 public class PriceData implements Serializable {
     private Double close;
     private Double high;

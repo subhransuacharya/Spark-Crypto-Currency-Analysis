@@ -2,6 +2,7 @@ package com.subhransu;
 
 import java.io.Serializable;
 
+//this class is used to store the stock data and the nested PriceData object
 public class StockInfo implements Serializable {
     private String symbol;
     private String timestamp;
